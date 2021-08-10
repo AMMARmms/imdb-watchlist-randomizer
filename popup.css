@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
+
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+
+body {
+  width: 480px;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
+
+
+/******************
+  RANDOMIZED MOVIE
+******************/
+
+.randomized-mmedia {
+  background: rgb(212, 212, 212);
+}
+
+.title {
+  font-size: 24px;
+  text-decoration: none;
+  color: rgb(87, 153, 239)
+}
+
+.year {
+  margin-top: -2px !important;
+}
+
+  /* HEROIC CONTENT */
+
+  .heroic-content {
+    position: relative;
+  }
+
+  .ratings,
+  .runtime {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .ratings {
+    list-style: none;
+    padding: 0;
+    left: 12%;
+  }
+
+  .rating {
+    font-size: 16px;
+    text-decoration: none;
+  }
+
+  .ratings .star {
+    background: url("images/star.png");
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    margin-right: 4px;
+  }
+
+  .metacritic {
+    font-size: 14px;
+    width: 24px;
+    margin: 1.5px 0 0 0;
+    border-radius: 2px;
+  }
+
+  .metacritic-favorable {
+    background-color: #66CC33;
+  }
+
+  .metacritic-average {
+    background-color: #FFCC33;
+  }
+
+  .metacritic-unfavorable {
+    background-color: #FF0000;
+  }
+
+  .runtime {
+    right: 12%;
+  }
