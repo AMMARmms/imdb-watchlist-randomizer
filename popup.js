@@ -103,8 +103,7 @@ const createCreditsElem = (credits) => {
 
 const createDivFromMultimedia = (mmedia) => {
   const div = document.createElement("div");
-  const divClasses = "randomized-mmedia w-75 text-center mx-auto py-2";
-  div.classList.add(...divClasses.split(" "));
+  addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto py-2");
   const { showCredits, showGenres, showPoster, showRatings } = loadOptions;
 
   div.appendChild(createTitleElem(mmedia));
@@ -173,6 +172,34 @@ document
   .addEventListener("click", saveOptionsToSync);
 
 /* ******************************************
+SAVE/LOAD LAST RANDOMLY CHOSEN MMEDIA TO/FROM CHROME SYNC
+****************************************** */
+const saveLastRandToSync = (randMmedia) => {
+  console.log(randMmedia);
+  chrome.storage.sync.set(
+    {
+      imdbRandomizer_lastRandom: randMmedia,
+    },
+    () => {
+      console.log("lastRandom saved");
+    }
+  );
+};
+
+const loadLastRand = async () => {
+  console.log("loading last rand");
+  await chrome.storage.sync.get("imdbRandomizer_lastRandom", (result) => {
+    const lastRand = result.imdbRandomizer_lastRandom;
+    if (lastRand) {
+      const div = createDivFromMultimedia(lastRand);
+      document.querySelector("body").appendChild(div);
+    } else {
+      console.log("No last rand mmedia");
+    }
+  });
+};
+
+/* ******************************************
 RANDOMLY SELECTING THE MULTIMEDIA
 ****************************************** */
 
@@ -191,6 +218,7 @@ const showRandomMultimedia = (mmedias) => {
   const mmedia = selectRandomMultimedia(mmedias);
   const mmediaDiv = createDivFromMultimedia(mmedia);
   document.querySelector("body").appendChild(mmediaDiv);
+  return mmedia;
 };
 
 /* ******************************************
@@ -219,10 +247,13 @@ chrome.runtime.onMessage.addListener((request, sender) => {
         )
       : multimedias;
     console.log(filteredMultimedias);
-    if (filteredMultimedias.length >= 1)
-      showRandomMultimedia(filteredMultimedias);
-    else console.log("Nothing to choose"); //TODO
+
+    if (filteredMultimedias.length >= 1) {
+      const randMmedia = showRandomMultimedia(filteredMultimedias);
+      saveLastRandToSync(randMmedia);
+    } else console.log("Nothing to choose"); //TODO
   }
 });
 
 loadSyncedOptions();
+loadLastRand();
