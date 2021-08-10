@@ -49,7 +49,7 @@ const constructMultimediasFromDivs = (multimediaDivs) => {
       ratingIMDB,
       ratingMetac,
       credits,
-      multiMediaType: multimediaType,
+      multimediaType,
     };
   });
 };
@@ -73,7 +73,7 @@ const clearLoadMore = async () => {
     await new Promise((resolve) => setTimeout(resolve, timeout));
   }
 
-  // gets all of the multimedi divs
+  // gets all of the multimedia divs
   const multimediaDivs = document.querySelectorAll(".lister-item");
   console.log(multimediaDivs.length);
 
