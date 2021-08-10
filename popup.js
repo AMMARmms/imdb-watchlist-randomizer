@@ -1,7 +1,8 @@
-// const create = (imageDiv) => {
-//   const posterSrc = imageDiv.firstElementChild.firstElementChild.src;
-//   return document.createElement("img", { src: posterSrc });
-// };
+let loadOptions;
+
+/* ******************************************
+GENERATING RANDOMLY SELECTED MULTIMEDIA'S DIV
+****************************************** */
 
 const addClassesToHTMLElem = (elem, classesString) => {
   elem.classList.add(...classesString.split(" "));
@@ -50,11 +51,11 @@ const createRatingsElem = (mmedia) => {
   return ratingsElem;
 };
 
-const createPosterElem = (src, showPoster = true) => {
+const createPosterElem = (src) => {
   const posterElem = document.createElement("img", { alt: "poster" });
-  showPoster
-    ? (posterElem.src = src)
-    : (posterElem.src = "https://picsum.photos/seed/imdb/96/142");
+  !src || src.slice(0, 4) !== "http"
+    ? (posterElem.src = "https://picsum.photos/seed/imdb/96/142")
+    : (posterElem.src = src);
   addClassesToHTMLElem(posterElem, "poster");
   return posterElem;
 };
@@ -66,11 +67,11 @@ const createRuntimeElem = (runtime) => {
   return runtimeELem;
 };
 
-const createHeroicContent = (mmedia) => {
+const createHeroicContent = (mmedia, showPoster = true, showRatings = true) => {
   const heroicDiv = document.createElement("div");
   addClassesToHTMLElem(heroicDiv, "mb-3 heroic-content");
-  heroicDiv.appendChild(createRatingsElem(mmedia));
-  heroicDiv.appendChild(createPosterElem(mmedia.imgSrc));
+  showRatings && heroicDiv.appendChild(createRatingsElem(mmedia));
+  showPoster && heroicDiv.appendChild(createPosterElem(mmedia.imgSrc));
   heroicDiv.appendChild(createRuntimeElem(mmedia.runtime));
   return heroicDiv;
 };
@@ -104,17 +105,76 @@ const createDivFromMultimedia = (mmedia) => {
   const div = document.createElement("div");
   const divClasses = "randomized-mmedia w-75 text-center mx-auto py-2";
   div.classList.add(...divClasses.split(" "));
+  const { showCredits, showGenres, showPoster, showRatings } = loadOptions;
 
   div.appendChild(createTitleElem(mmedia));
   div.appendChild(createYearElem(mmedia.year));
-  div.appendChild(createHeroicContent(mmedia));
-  div.appendChild(createGenresElem(mmedia.genres.split(", ")));
-  div.appendChild(createCreditsElem(mmedia.credits));
+  div.appendChild(createHeroicContent(mmedia, showPoster, showRatings));
+  showGenres && div.appendChild(createGenresElem(mmedia.genres.split(", ")));
+  showCredits && div.appendChild(createCreditsElem(mmedia.credits));
 
   return div;
 };
 
-//**************** */
+/* ******************************************
+SAVE/LOAD OPTIONS TO/FROM CHROME SYNC
+****************************************** */
+const updateFormOptionsOnDom = (options) => {
+  console.log(options);
+  Object.keys(options).forEach((key) => {
+    const elem = document.getElementById(key);
+    elem.tagName === "INPUT" && elem.type === "checkbox"
+      ? (elem.checked = options[key])
+      : (elem.value = options[key]);
+  });
+};
+
+const loadSyncedOptions = async () => {
+  await chrome.storage.sync.get("imdbRandomizer_options", (result) => {
+    const options = result.imdbRandomizer_options;
+    if (options) updateFormOptionsOnDom(options);
+    else console.log("Couldnt find saved options on sync");
+    loadOptions = options;
+  });
+};
+
+const constructOptionsFromForm = () => {
+  const showRatings = document.querySelector("#showRatings").checked;
+  const showPoster = document.querySelector("#showPoster").checked;
+  const showGenres = document.querySelector("#showGenres").checked;
+  const showCredits = document.querySelector("#showCredits").checked;
+  const minIMDBRating = document.querySelector("#minIMDBRating").value;
+  const multimediaType = document.querySelector("#multimediaType").value;
+  return {
+    showRatings,
+    showPoster,
+    showGenres,
+    showCredits,
+    minIMDBRating,
+    multimediaType,
+  };
+};
+
+const saveOptionsToSync = () => {
+  const options = constructOptionsFromForm();
+  chrome.storage.sync.set(
+    {
+      imdbRandomizer_options: options,
+    },
+    () => {
+      console.log("saved");
+      loadOptions = options;
+    }
+  );
+};
+
+document
+  .querySelector("#save-options")
+  .addEventListener("click", saveOptionsToSync);
+
+/* ******************************************
+RANDOMLY SELECTING THE MULTIMEDIA
+****************************************** */
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -133,12 +193,36 @@ const showRandomMultimedia = (mmedias) => {
   document.querySelector("body").appendChild(mmediaDiv);
 };
 
+/* ******************************************
+WAITING THE ORDER OF RANDOMLY SELECTING
+****************************************** */
+const multimediaIsATarget = (mmedia, minRating, mmType) => {
+  return (
+    +mmedia.ratingIMDB >= +minRating &&
+    (mmedia.multimediaType === mmType || mmedia.multimediaType === "all")
+  );
+};
+
 chrome.runtime.onMessage.addListener((request, sender) => {
   console.log(request);
   if (request.message && request.message === "all_multimedia") {
     const multimedias = JSON.parse(request.payload);
     console.log("popup recieved the multimedia:");
-    console.log(multimedias);
-    showRandomMultimedia(multimedias);
+    console.log(loadOptions);
+    const filteredMultimedias = loadOptions
+      ? multimedias.filter((mmedia) =>
+          multimediaIsATarget(
+            mmedia,
+            loadOptions.minIMDBRating,
+            loadOptions.multimediaType
+          )
+        )
+      : multimedias;
+    console.log(filteredMultimedias);
+    if (filteredMultimedias.length >= 1)
+      showRandomMultimedia(filteredMultimedias);
+    else console.log("Nothing to choose"); //TODO
   }
 });
+
+loadSyncedOptions();

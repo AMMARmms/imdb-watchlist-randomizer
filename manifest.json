@@ -12,6 +12,7 @@
     "options_page": "./options.html",
     "permissions": [
         "scripting",
+        "storage",
         "tabs"
     ],
     "host_permissions": [
