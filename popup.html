@@ -14,24 +14,84 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <form>
-      <!--
-pause extension
-      
-  show ratings?
-  show poster?
-  show genres?
-  show credits?
+    <form class="p-2 bg-success mb-2">
+      <div class="form-check form-check-inline">
+        <input
+          checked
+          class="form-check-input"
+          type="checkbox"
+          id="showRatings"
+          value="option1"
+        />
+        <label class="form-check-label" for="showRatings">Show Ratings</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          checked
+          class="form-check-input"
+          type="checkbox"
+          id="showPoster"
+        />
+        <label class="form-check-label" for="showPoster">Show Poster</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          checked
+          class="form-check-input"
+          type="checkbox"
+          id="showGenres"
+        />
+        <label class="form-check-label" for="showGenres">Show Genres</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          checked
+          class="form-check-input"
+          type="checkbox"
+          id="showCredits"
+        />
+        <label class="form-check-label" for="showCredits">Show Credits</label>
+      </div>
 
-  min imdb rating
-  min metascore
-  tv, movie or both? option
-  year between x and y
-  Randomly pick n multimedia
--->
-      <button id="randomize">RANDOMIZE</button>
+      <br />
+
+      <div class="form-row">
+        <div class="col-md-6 mb-3" style="width: auto">
+          <label class="" for="minIMDBRating">Min IMDB Rating:</label>
+          <select class="form-control form-control-sm" id="minIMDBRating">
+            <option value="1" selected>All</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3" style="width: auto">
+          <label class="" for="multimediaType">Multimedia Type: </label>
+          <select class="form-control form-control-sm" id="multimediaType">
+            <option value="movie" selected>Movies Only</option>
+            <option value="series">TV Series Only</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-group" role="group">
+        <button type="button" id="randomize" class="btn btn-danger btn-sm">
+          RANDOMIZE
+        </button>
+        <button id="save-options" type="button" class="btn btn-primary btn-sm">
+          Save Options
+        </button>
+      </div>
     </form>
 
+
+    <!-- EXAMPLE MOVIE -->
     <div class="randomized-mmedia w-75 text-center mx-auto py-2">
       <a href="#" class="title">Some Movie Title</a>
       <p class="year mb-3">2008</p>
@@ -41,7 +101,7 @@ pause extension
           <li class="rating"><span class="star"></span> 7.8</li>
           <li class="mx-auto rating metacritic metacritic-favorable">78</li>
         </ul>
-  
+
         <img
           src="https://picsum.photos/seed/imdb/96/142"
           alt="poster"
