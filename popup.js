@@ -210,7 +210,7 @@ function getRandomInt(min, max) {
 }
 
 const selectRandomMultimedia = (mmedias) => {
-  const randInt = getRandomInt(0, mmedias.length);
+  const randInt = getRandomInt(0, mmedias.length - 1);
   return mmedias[randInt];
 };
 
@@ -222,7 +222,7 @@ const showRandomMultimedia = (mmedias) => {
 };
 
 /* ******************************************
-WAITING THE ORDER OF RANDOMLY SELECTING
+MAIN
 ****************************************** */
 const multimediaIsATarget = (mmedia, minRating, mmType) => {
   return (
@@ -231,28 +231,49 @@ const multimediaIsATarget = (mmedia, minRating, mmType) => {
   );
 };
 
+const filterMultimedias = (multimedias) => {
+  const result = loadOptions
+    ? multimedias.filter((mmedia) =>
+        multimediaIsATarget(
+          mmedia,
+          loadOptions.minIMDBRating,
+          loadOptions.multimediaType
+        )
+      )
+    : multimedias;
+  return result;
+};
+
+const main = (multimedias) => {
+  const filteredMultimedias = filterMultimedias(multimedias);
+  console.log(filteredMultimedias);
+
+  if (filteredMultimedias.length >= 1) {
+    const randMmedia = showRandomMultimedia(filteredMultimedias);
+    saveLastRandToSync(randMmedia);
+  } else console.log("Nothing to choose"); //TODO
+};
+
+/* ******************************************
+WAITING THE MULTIMEDIA THAT IS PARSED FROM WATCHLIST PAGE
+****************************************** */
 chrome.runtime.onMessage.addListener((request, sender) => {
   console.log(request);
   if (request.message && request.message === "all_multimedia") {
     const multimedias = JSON.parse(request.payload);
-    console.log("popup recieved the multimedia:");
+    console.log("popup recieved the multimedia from data parser");
     console.log(loadOptions);
-    const filteredMultimedias = loadOptions
-      ? multimedias.filter((mmedia) =>
-          multimediaIsATarget(
-            mmedia,
-            loadOptions.minIMDBRating,
-            loadOptions.multimediaType
-          )
-        )
-      : multimedias;
-    console.log(filteredMultimedias);
-
-    if (filteredMultimedias.length >= 1) {
-      const randMmedia = showRandomMultimedia(filteredMultimedias);
-      saveLastRandToSync(randMmedia);
-    } else console.log("Nothing to choose"); //TODO
+    main(multimedias);
   }
+});
+
+/* ******************************************
+SENDING THE ORDER OF "SCAN AND RANDOMIZE"
+****************************************** */
+document.getElementById("scanAndRandomize").addEventListener("click", () => {
+  chrome.runtime.sendMessage({
+    message: "scan_watchlist",
+  });
 });
 
 loadSyncedOptions();
