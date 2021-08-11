@@ -1,4 +1,12 @@
 let loadOptions;
+const defaultOptions = {
+  minIMDBRating: "1",
+  multimediaType: "movie",
+  showCredits: true,
+  showGenres: true,
+  showPoster: true,
+  showRatings: true,
+};
 
 /* ******************************************
 GENERATING RANDOMLY SELECTED MULTIMEDIA'S DIV
@@ -128,12 +136,18 @@ const updateFormOptionsOnDom = (options) => {
   });
 };
 
+// if there are synced settings, assign them to global loadOptions variable
+// if not assign defaultOptions to the same variable
+// call the function that updates form dom
 const loadSyncedOptions = async () => {
   await chrome.storage.sync.get("imdbRandomizer_options", (result) => {
     const options = result.imdbRandomizer_options;
-    if (options) updateFormOptionsOnDom(options);
-    else console.log("Couldnt find saved options on sync");
-    loadOptions = options;
+    if (options) loadOptions = options;
+    else {
+      console.log("Couldnt find saved options on sync. Using the defaults");
+      loadOptions = defaultOptions;
+    }
+    updateFormOptionsOnDom(loadOptions);
   });
 };
 
@@ -200,6 +214,42 @@ const loadLastRand = async () => {
 };
 
 /* ******************************************
+SAVE/LOAD WATCHLIST TO/FROM LOCAL STORAGE
+****************************************** */
+const saveWatchlistToLocal = (multimedias) => {
+  chrome.storage.local.set(
+    {
+      imdbRandomizer_watchlist: multimedias,
+    },
+    () => {
+      console.log("watchlist is saved");
+    }
+  );
+};
+
+const loadWatchlistFromLocal = (randomizeFromCacheBtn, listenerCBack) => {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get("imdbRandomizer_watchlist", (result) => {
+      const multimedias = result.imdbRandomizer_watchlist;
+      if (multimedias) {
+        randomizeFromCacheBtn.disabled = false;
+        randomizeFromCacheBtn.addEventListener("click", () =>
+          listenerCBack(multimedias)
+        );
+        resolve(multimedias);
+      } else {
+        console.log("No cached watchlist");
+        randomizeFromCacheBtn.disabled = true;
+        randomizeFromCacheBtn.removeEventListener("click", () =>
+          listenerCBack(multimedias)
+        );
+        resolve(null);
+      }
+    });
+  });
+};
+
+/* ******************************************
 RANDOMLY SELECTING THE MULTIMEDIA
 ****************************************** */
 
@@ -222,7 +272,7 @@ const showRandomMultimedia = (mmedias) => {
 };
 
 /* ******************************************
-MAIN
+                    MAIN
 ****************************************** */
 const multimediaIsATarget = (mmedia, minRating, mmType) => {
   return (
@@ -257,10 +307,19 @@ const main = (multimedias) => {
 /* ******************************************
 WAITING THE MULTIMEDIA THAT IS PARSED FROM WATCHLIST PAGE
 ****************************************** */
+const loadWatchlist = async () => {
+  await loadWatchlistFromLocal(
+    document.querySelector("#randomizeFromSync"),
+    (multimedias) => main(multimedias)
+  );
+};
+
 chrome.runtime.onMessage.addListener((request, sender) => {
   console.log(request);
   if (request.message && request.message === "all_multimedia") {
     const multimedias = JSON.parse(request.payload);
+    saveWatchlistToLocal(multimedias);
+    loadWatchlist(); // using it to update dom. gotta refactor this project lol
     console.log("popup recieved the multimedia from data parser");
     console.log(loadOptions);
     main(multimedias);
@@ -276,5 +335,30 @@ document.getElementById("scanAndRandomize").addEventListener("click", () => {
   });
 });
 
-loadSyncedOptions();
-loadLastRand();
+/* ******************************************
+CLEAR SYNC and LOCALSTORAGE (For debugging)
+****************************************** */
+const clearSyncAndLocal = () => {
+  // thanks to xOxxOm for the code: https://stackoverflow.com/a/31813035/13184911
+  chrome.storage.sync.clear(function () {
+    var error = chrome.runtime.lastError;
+    if (error) {
+      console.error(error);
+    }
+  });
+  chrome.storage.local.clear(function () {
+    var error = chrome.runtime.lastError;
+    if (error) {
+      console.error(error);
+    }
+  });
+};
+// might assign to a btn that will also call window.close() to reset the dom easily
+
+(async function () {
+  // clearSyncAndLocal();
+
+  loadSyncedOptions();
+  loadLastRand();
+  await loadWatchlist();
+})();
