@@ -150,3 +150,14 @@ border-radius: 5px;
   .runtime {
     right: 12%;
   }
+
+/******************
+  FOOTER
+******************/
+
+footer {
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background: #931aff;
+}
