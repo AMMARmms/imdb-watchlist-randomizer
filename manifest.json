@@ -1,7 +1,7 @@
 {
     "name": "Chrome Exte MV3",
     "description": "building chrome ext",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "manifest_version": 3,
     "icons": {
         "16": "./images/icon-16x16.png",
