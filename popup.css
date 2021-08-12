@@ -13,6 +13,11 @@ body {
   margin: 5px;
 }
 
+.btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}
+
 nav {
   background: #f5c518;
   user-select: none;
@@ -44,6 +49,18 @@ nav a:hover {
 #githubHref:hover {
   filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(1)
   /* filter: sepia(1) saturate(50) hue-rotate(200deg) brightness(1.2); */
+}
+
+.cool-orange {
+  background-color: #ff4f00;
+}
+
+.cool-orange:hover {
+  background-color: #d84400;
+}
+
+#randomizeFromSync:disabled {
+  background-color: rgb(170, 170, 170);
 }
 
 /******************

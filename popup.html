@@ -20,9 +20,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a id="aboutHref" class="nav-link" href="#"
-              >About</a
-            >
+            <a id="aboutHref" class="nav-link" href="#">About</a>
           </li>
           <li class="nav-item">
             <a
@@ -41,49 +39,9 @@
       </div>
     </nav>
 
-    <form class="p-2 bg-success mb-2">
-      <div class="form-check form-check-inline">
-        <input
-          checked
-          class="form-check-input"
-          type="checkbox"
-          id="showRatings"
-          value="option1"
-        />
-        <label class="form-check-label" for="showRatings">Show Ratings</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input
-          checked
-          class="form-check-input"
-          type="checkbox"
-          id="showPoster"
-        />
-        <label class="form-check-label" for="showPoster">Show Poster</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input
-          checked
-          class="form-check-input"
-          type="checkbox"
-          id="showGenres"
-        />
-        <label class="form-check-label" for="showGenres">Show Genres</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input
-          checked
-          class="form-check-input"
-          type="checkbox"
-          id="showCredits"
-        />
-        <label class="form-check-label" for="showCredits">Show Credits</label>
-      </div>
-
-      <br />
-
-      <div class="form-row">
-        <div class="col-md-6 mb-3" style="width: auto">
+    <form class="p-2 mt-2">
+      <div class="form-row m-0">
+        <div class="col-md-6 mb-3 ml-auto mr-4" style="width: auto">
           <label class="" for="minIMDBRating">Min IMDB Rating:</label>
           <select class="form-control form-control-sm" id="minIMDBRating">
             <option value="1" selected>All</option>
@@ -97,7 +55,7 @@
             <option value="9">9</option>
           </select>
         </div>
-        <div class="col-md-6 mb-3" style="width: auto">
+        <div class="col-md-6 mb-3 mr-auto ml-4" style="width: auto">
           <label class="" for="multimediaType">Multimedia Type: </label>
           <select class="form-control form-control-sm" id="multimediaType">
             <option value="movie" selected>Movies Only</option>
@@ -106,6 +64,52 @@
           </select>
         </div>
       </div>
+
+      <div class="d-flex justify-content-around">
+        <div class="form-check form-check-inline">
+          <input
+            checked
+            class="form-check-input"
+            type="checkbox"
+            id="showRatings"
+            value="option1"
+          />
+          <label class="form-check-label" for="showRatings">Ratings</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            checked
+            class="form-check-input"
+            type="checkbox"
+            id="showPoster"
+          />
+          <label class="form-check-label" for="showPoster">Poster</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            checked
+            class="form-check-input"
+            type="checkbox"
+            id="showGenres"
+          />
+          <label class="form-check-label" for="showGenres">Genres</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            checked
+            class="form-check-input"
+            type="checkbox"
+            id="showCredits"
+          />
+          <label class="form-check-label" for="showCredits">Credits</label>
+        </div>
+      </div>
+
+      <small class="form-text text-danger mt-3 mb-1 text-center"
+        ><strong
+          >Save any changed options first before randomizing!</strong
+        ></small
+      >
 
       <div class="container text-center">
         <button id="save-options" type="button" class="btn btn-primary btn-sm">
@@ -118,7 +122,7 @@
           <button
             type="button"
             id="scanAndRandomize"
-            class="btn btn-danger btn-sm"
+            class="btn btn-outline-danger btn-sm"
           >
             SCAN & RANDOMIZE
           </button>
@@ -126,7 +130,7 @@
             disabled
             id="randomizeFromSync"
             type="button"
-            class="btn btn-secondary btn-sm"
+            class="btn text-white btn-sm ml-2 cool-orange"
           >
             RANDOMIZE
           </button>
