@@ -13,6 +13,7 @@ const updateinfoOutputDivMsg = (msg, color) => {
   const errorMsgDiv = document.getElementById("infoOutputDiv");
   errorMsgDiv.textContent = msg;
   errorMsgDiv.style.color = color;
+  errorMsgDiv.classList.add("mb-2");
 };
 
 /* ******************************************
@@ -333,7 +334,7 @@ const handleAllMultimediaRequest = (request) => {
   console.log("loadOptions:", loadOptions);
   main(multimedias);
   updateinfoOutputDivMsg(
-    "Scanning is done and also the RANDOMIZE button is available for you to randomize from cache in less than a second!",
+    "Scanning is done and the RANDOMIZE button is available.",
     "#FF4F00"
   );
 };
