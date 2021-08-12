@@ -20,6 +20,10 @@ body {
 
 nav {
   background: #f5c518;
+}
+
+nav,
+form {
   user-select: none;
 }
 
@@ -68,14 +72,23 @@ nav a:hover {
 ******************/
 
 .randomized-mmedia {
-  background: rgb(212, 212, 212);
-  margin-bottom: 10px;
+  background: #931aff;
+
+color: rgb(255, 255, 255);
+border-radius: 5px;
+  margin-top: 18px;
 }
 
 .title {
   font-size: 24px;
   text-decoration: none;
-  color: rgb(87, 153, 239)
+  /* color: rgb(87, 153, 239) */
+  color: #DBFF00;
+}
+
+.title:hover {
+  text-decoration: none;
+  color: #E8DA0C;
 }
 
 .year {

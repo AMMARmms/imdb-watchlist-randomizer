@@ -20,6 +20,7 @@ const createTitleElem = (mmedia) => {
   const titleHrefElem = document.createElement("a");
   titleHrefElem.href = mmedia.multimediaHref;
   titleHrefElem.textContent = mmedia.title;
+  titleHrefElem.target = "_blank";
   addClassesToHTMLElem(titleHrefElem, "title");
   return titleHrefElem;
 };
@@ -99,7 +100,7 @@ const createGenresElem = (genres) => {
 
 const createCreditsElem = (credits) => {
   const creditsList = document.createElement("ul");
-  addClassesToHTMLElem(creditsList, "credits list-inline");
+  addClassesToHTMLElem(creditsList, "credits list-inline m-0");
   credits.forEach((credit) => {
     const creditListItem = document.createElement("li");
     creditListItem.textContent = credit;
@@ -111,7 +112,7 @@ const createCreditsElem = (credits) => {
 
 const createDivFromMultimedia = (mmedia) => {
   const div = document.createElement("div");
-  addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto py-2");
+  addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto p-2");
   const { showCredits, showGenres, showPoster, showRatings } = loadOptions;
 
   div.appendChild(createTitleElem(mmedia));
@@ -206,7 +207,7 @@ const loadLastRand = async () => {
     const lastRand = result.imdbRandomizer_lastRandom;
     if (lastRand) {
       const div = createDivFromMultimedia(lastRand);
-      document.querySelector("body").appendChild(div);
+      document.querySelector("#results").appendChild(div);
     } else {
       console.log("No last rand mmedia");
     }
