@@ -47,11 +47,11 @@ nav a:hover {
 }
 
 #githubHref {
-  filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(1.4)
+  filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(1)
 }
 
 #githubHref:hover {
-  filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(1)
+  filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(.6)
   /* filter: sepia(1) saturate(50) hue-rotate(200deg) brightness(1.2); */
 }
 
