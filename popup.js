@@ -8,6 +8,12 @@ const defaultOptions = {
   showRatings: true,
 };
 
+// updates the div which I output some errors, state changes etc. to inform the user
+const updateinfoOutputDivMsg = (msg) => {
+  const errorMsgDiv = document.getElementById("infoOutputDiv");
+  errorMsgDiv.textContent = msg;
+};
+
 /* ******************************************
 GENERATING RANDOMLY SELECTED MULTIMEDIA'S DIV
 ****************************************** */
@@ -177,6 +183,7 @@ const saveOptionsToSync = () => {
     },
     () => {
       console.log("saved");
+      updateinfoOutputDivMsg("Your randomize options are saved.");
       loadOptions = options;
     }
   );
@@ -324,6 +331,21 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     console.log("popup recieved the multimedia from data parser");
     console.log(loadOptions);
     main(multimedias);
+  }
+});
+
+/* ******************************************
+LISTENING FOR THE VALIDATION OF THE WATCHLIST PAGE URL
+If not a valid page, it will notify the user.
+****************************************** */
+chrome.runtime.onMessage.addListener((request, sender) => {
+  if (request.message && request.message === "watchlist_url_validation") {
+    const itIsWatchlistPage = request.payload;
+    if (itIsWatchlistPage) updateinfoOutputDivMsg("");
+    else
+      updateinfoOutputDivMsg(
+        "This is not a watchlist page. If it is please report this as a bug."
+      );
   }
 });
 
