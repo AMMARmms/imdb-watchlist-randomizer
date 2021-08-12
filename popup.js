@@ -9,9 +9,10 @@ const defaultOptions = {
 };
 
 // updates the div which I output some errors, state changes etc. to inform the user
-const updateinfoOutputDivMsg = (msg) => {
+const updateinfoOutputDivMsg = (msg, color) => {
   const errorMsgDiv = document.getElementById("infoOutputDiv");
   errorMsgDiv.textContent = msg;
+  errorMsgDiv.style.color = color;
 };
 
 /* ******************************************
@@ -183,7 +184,7 @@ const saveOptionsToSync = () => {
     },
     () => {
       console.log("saved");
-      updateinfoOutputDivMsg("Your randomize options are saved.");
+      updateinfoOutputDivMsg("Your randomize options are saved.", "#007bff");
       loadOptions = options;
     }
   );
@@ -313,7 +314,7 @@ const main = (multimedias) => {
 };
 
 /* ******************************************
-WAITING THE MULTIMEDIA THAT IS PARSED FROM WATCHLIST PAGE
+              MESSAGE LISTENERS
 ****************************************** */
 const loadWatchlist = async () => {
   await loadWatchlistFromLocal(
@@ -322,30 +323,47 @@ const loadWatchlist = async () => {
   );
 };
 
+/* WAITING THE MULTIMEDIA THAT IS PARSED FROM WATCHLIST PAGE
+this listener asserts that the current page is an imdb watchlist
+the validation of this made in background.js before sanding this message to popup.js */
+const handleAllMultimediaRequest = (request) => {
+  const multimedias = JSON.parse(request.payload);
+  saveWatchlistToLocal(multimedias);
+  loadWatchlist(); // using it to update dom. gotta refactor this project lol
+  console.log("loadOptions:", loadOptions);
+  main(multimedias);
+  updateinfoOutputDivMsg(
+    "Scanning is done and also the RANDOMIZE button is available for you to randomize from cache in less than a second!",
+    "#FF4F00"
+  );
+};
+
+//LISTENING FOR THE VALIDATION OF THE WATCHLIST PAGE URL
+//If not a valid page, it will notify the user.
+const handleWatchListValidRequest = (request) => {
+  const itIsWatchlistPage = request.payload;
+  if (itIsWatchlistPage) updateinfoOutputDivMsg("");
+  else
+    updateinfoOutputDivMsg(
+      "This is not a watchlist page. If it is please report this as a bug.",
+      "rgb(255 0 0)"
+    );
+};
+
+const handleScanningStartedRequest = (request) => {
+  updateinfoOutputDivMsg("Scanning has started. Hold on there!", "#DC3545");
+};
+
 chrome.runtime.onMessage.addListener((request, sender) => {
   console.log(request);
-  if (request.message && request.message === "all_multimedia") {
-    const multimedias = JSON.parse(request.payload);
-    saveWatchlistToLocal(multimedias);
-    loadWatchlist(); // using it to update dom. gotta refactor this project lol
-    console.log("popup recieved the multimedia from data parser");
-    console.log(loadOptions);
-    main(multimedias);
-  }
-});
-
-/* ******************************************
-LISTENING FOR THE VALIDATION OF THE WATCHLIST PAGE URL
-If not a valid page, it will notify the user.
-****************************************** */
-chrome.runtime.onMessage.addListener((request, sender) => {
-  if (request.message && request.message === "watchlist_url_validation") {
-    const itIsWatchlistPage = request.payload;
-    if (itIsWatchlistPage) updateinfoOutputDivMsg("");
-    else
-      updateinfoOutputDivMsg(
-        "This is not a watchlist page. If it is please report this as a bug."
-      );
+  const msg = request.message;
+  if (msg) {
+    if (msg === "all_multimedia") handleAllMultimediaRequest(request);
+    else if (msg === "watchlist_url_validation")
+      handleWatchListValidRequest(request);
+    else if (msg === "scanning_has_started")
+      handleScanningStartedRequest(request);
+    else throw new Error("Invalid message");
   }
 });
 

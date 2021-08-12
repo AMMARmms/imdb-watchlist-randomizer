@@ -93,6 +93,9 @@
     const loadMore = document.querySelector(".load-more");
     loadMore ? loadMore.click() : clearLoadMore();
   };
+  chrome.runtime.sendMessage({
+    message: "scanning_has_started",
+  });
   const loadMoreInterval = setInterval(loadMore, 200);
 
   //  window.scrollBy(0, loadMore.offsetTop - document.body.scrollTop);
