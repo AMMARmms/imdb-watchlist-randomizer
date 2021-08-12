@@ -69,7 +69,7 @@ const createRatingsElem = (mmedia) => {
 const createPosterElem = (src) => {
   const posterElem = document.createElement("img", { alt: "poster" });
   !src || src.slice(0, 4) !== "http"
-    ? (posterElem.src = "https://picsum.photos/seed/imdb/96/142")
+    ? (posterElem.src = "./images/fbackImg.png")
     : (posterElem.src = src);
   addClassesToHTMLElem(posterElem, "poster");
   return posterElem;
