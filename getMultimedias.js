@@ -67,9 +67,9 @@
     // To load multimedias' content it scrolls ten by ten.
     // If the content is already loaded it just wait for 0.1 seconds,
     // otherwise it pauses for 2.5 seconds
-    for (let i = 10; i < numOfTitles; i += 10) {
+    for (let i = 5; i < numOfTitles; i += 5) {
       const itemToScroll = document.querySelectorAll(".lister-item")[i];
-      const timeout = itemToScroll.querySelector(".clearfix") ? 100 : 2500;
+      const timeout = itemToScroll.querySelector(".clearfix") ? 500 : 2000;
       itemToScroll.scrollIntoView();
       await new Promise((resolve) => setTimeout(resolve, timeout));
     }
