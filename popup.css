@@ -1,10 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
+/******************
+  GENERAL & NAVBAR
+******************/
 
-/* * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
 
 body {
   width: 480px;
@@ -13,6 +11,39 @@ body {
 
 .btn {
   margin: 5px;
+}
+
+nav {
+  background: #f5c518;
+  user-select: none;
+}
+
+a {
+  text-decoration: none;
+  transition: .2s;
+}
+
+nav > p {
+  font-weight: bold;
+  cursor: default;
+}
+
+nav > p,
+nav a {
+  color: #121212; 
+}
+
+nav a:hover {
+  color: #666666;
+}
+
+#githubHref {
+  filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(1.4)
+}
+
+#githubHref:hover {
+  filter: sepia(1) saturate(190) hue-rotate(269deg) brightness(1)
+  /* filter: sepia(1) saturate(50) hue-rotate(200deg) brightness(1.2); */
 }
 
 /******************
