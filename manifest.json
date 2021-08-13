@@ -1,6 +1,6 @@
 {
-    "name": "Chrome Exte MV3",
-    "description": "building chrome ext",
+    "name": "IMDB Watchlist Randomizer",
+    "description": "A browser extension that allows users to filter & randomly pick a movie, tv-series etc, from an IMDB watchlist.",
     "version": "1.0.0",
     "manifest_version": 3,
     "icons": {
