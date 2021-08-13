@@ -27,6 +27,7 @@
         "tabs"
     ],
     "host_permissions": [
-        "https://www.imdb.com/user/*/watchlist*"
+        "https://www.imdb.com/user/*/watchlist*",
+        "http://www.imdb.com/user/*/watchlist*"
     ]
 }

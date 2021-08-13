@@ -8,7 +8,7 @@ I will be using the word multimedia for movie, tv-series, documentary etc.
 - When you reopen the popup you will only see your latest randomization if there is one. The app doesn't store history for now.
 
 ### How long does it take to scan?
-I created a new account and added IMDB Top250 to my watchlist ([Watchlist](https://www.imdb.com/user/ur135486613/watchlist?ref_=nv_usr_wl_all_0) is public and I won't touch it if you like to use it as a IMDB Top250 randomizer) and it took 30 seconds. In my primary account I had around 700 and it took around a minute. You can make a guess for your watchlist based on these as well.
+I created a new account and added IMDB Top250 to my watchlist ([Watchlist](https://www.imdb.com/user/ur135486613/watchlist?ref_=nv_usr_wl_all_0) is public and I won't touch it if you like to use it as an IMDB Top250 randomizer) and it took 30 seconds. In my primary account I had around 700 and it took around a minute. You can make a guess for your watchlist based on these as well.
 
 ### Why some information are missing on my randomized multimedia?
 It's because the scanner waits some time for page to load multimedia content, but it skips to the next one when the time is over. So, it may skip some detail if page couldn't load that data meanwhile (usually the poster). If you are having a lot of missing information, it may be because of your internet speed. I may add a button for slower scanning later.
