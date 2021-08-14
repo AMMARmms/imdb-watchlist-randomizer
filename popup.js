@@ -287,7 +287,7 @@ const showRandomMultimedia = (mmedias) => {
 const multimediaIsATarget = (mmedia, minRating, mmType) => {
   return (
     +mmedia.ratingIMDB >= +minRating &&
-    (mmedia.multimediaType === mmType || mmedia.multimediaType === "all")
+    (mmType === "all" || mmedia.multimediaType === mmType)
   );
 };
 
