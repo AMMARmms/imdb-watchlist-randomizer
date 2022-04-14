@@ -36,7 +36,7 @@ const createTitleElem = (mmedia) => {
 const createYearElem = (year) => {
   const yearElem = document.createElement("p");
   yearElem.textContent = year;
-  addClassesToHTMLElem(yearElem, "year mb-3");
+  addClassesToHTMLElem(yearElem, "year mb-4");
   return yearElem;
 };
 
@@ -86,7 +86,7 @@ const createRuntimeElem = (runtime) => {
 
 const createHeroicContent = (mmedia, showPoster = true, showRatings = true) => {
   const heroicDiv = document.createElement("div");
-  addClassesToHTMLElem(heroicDiv, "mb-3 heroic-content");
+  addClassesToHTMLElem(heroicDiv, "mb-5 heroic-content");
   showRatings && heroicDiv.appendChild(createRatingsElem(mmedia));
   showPoster && heroicDiv.appendChild(createPosterElem(mmedia.imgSrc));
   heroicDiv.appendChild(createRuntimeElem(mmedia.runtime));
@@ -120,7 +120,7 @@ const createCreditsElem = (credits) => {
 
 const createDivFromMultimedia = (mmedia) => {
   const div = document.createElement("div");
-  addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto p-2");
+  addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto p-2 pb-3");
   const { showCredits, showGenres, showPoster, showRatings } = loadOptions;
 
   div.appendChild(createTitleElem(mmedia));
@@ -185,15 +185,21 @@ const saveOptionsToSync = () => {
     },
     () => {
       console.log("saved");
-      updateinfoOutputDivMsg("Your randomize options are saved.", "#007bff");
+      // updateinfoOutputDivMsg("Your randomize options are saved.", "#007bff");
       loadOptions = options;
     }
   );
 };
 
-document
-  .querySelector("#save-options")
-  .addEventListener("click", saveOptionsToSync);
+inputIds = ['showRatings', 'showPoster', 'showGenres', 'showCredits', 'minIMDBRating', 'multimediaType']
+inputIds.forEach(id => {
+  const inputWithId = document.querySelector(`#${id}`);
+  inputWithId.addEventListener('change', saveOptionsToSync)
+})
+
+// document
+//   .querySelector("#save-options")
+//   .addEventListener("click", saveOptionsToSync);
 
 /* ******************************************
 SAVE/LOAD LAST RANDOMLY CHOSEN MMEDIA TO/FROM CHROME SYNC
