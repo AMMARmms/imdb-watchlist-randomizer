@@ -99,6 +99,7 @@ border-radius: 5px;
 
   .heroic-content {
     position: relative;
+    min-height: 40px;
   }
 
   .ratings,

@@ -86,7 +86,7 @@ const createRuntimeElem = (runtime) => {
 
 const createHeroicContent = (mmedia, showPoster = true, showRatings = true) => {
   const heroicDiv = document.createElement("div");
-  addClassesToHTMLElem(heroicDiv, "mb-5 heroic-content");
+  addClassesToHTMLElem(heroicDiv, "mb-4 heroic-content");
   showRatings && heroicDiv.appendChild(createRatingsElem(mmedia));
   showPoster && heroicDiv.appendChild(createPosterElem(mmedia.imgSrc));
   heroicDiv.appendChild(createRuntimeElem(mmedia.runtime));
