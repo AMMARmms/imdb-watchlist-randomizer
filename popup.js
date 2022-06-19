@@ -283,7 +283,7 @@ const selectRandomMultimedia = (mmedias) => {
 const showRandomMultimedia = (mmedias) => {
   const mmedia = selectRandomMultimedia(mmedias);
   const mmediaDiv = createDivFromMultimedia(mmedia);
-  document.querySelector("#results").appendChild(mmediaDiv);
+  document.querySelector("#results").prepend(mmediaDiv);
   return mmedia;
 };
 
