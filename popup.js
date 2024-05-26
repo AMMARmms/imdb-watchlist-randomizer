@@ -3,7 +3,7 @@ const defaultOptions = {
   minIMDBRating: "1",
   multimediaType: "movie",
   showCredits: true,
-  showGenres: true,
+  showGenres: false,
   showPoster: true,
   showRatings: true,
 };
@@ -126,7 +126,7 @@ const createDivFromMultimedia = (mmedia) => {
   div.appendChild(createTitleElem(mmedia));
   div.appendChild(createYearElem(mmedia.year));
   div.appendChild(createHeroicContent(mmedia, showPoster, showRatings));
-  showGenres && div.appendChild(createGenresElem(mmedia.genres.split(", ")));
+  // showGenres && div.appendChild(createGenresElem(mmedia.genres.split(", "))); // TODO remove from code as well
   showCredits && div.appendChild(createCreditsElem(mmedia.credits));
 
   return div;

@@ -8,35 +8,32 @@
 
   const constructMultimediasFromDivs = (multimediaDivs) => {
     return Array.from(multimediaDivs).map((div) => {
-      const multimediaType = Array.from(div.classList).includes("series")
+      const titleTypeSpan = div.querySelector('span.dli-title-type-data');
+      const multimediaType = titleTypeSpan && titleTypeSpan.textContent === 'TV Series'
         ? "series"
         : "movie";
 
-      const imgHrefElem =
-        div.querySelector(".lister-item-image").firstElementChild;
-      const multimediaHref = imgHrefElem.href;
-      const imgSrc = imgHrefElem.firstElementChild.src;
+      const posterContainer = div.querySelector('.ipc-poster');
+      const imgHrefElem = posterContainer.querySelector('img');
+      const imgSrc = imgHrefElem.src;
+      
+      const multimediaHref = div.querySelector('.ipc-lockup-overlay.ipc-focusable').href;
 
-      const title = div.querySelector(".lister-item-header").firstElementChild
-        .textContent;
-      // console.log(title);
+      const title = div.querySelector(".ipc-title__text").textContent.split('.')[1].trim();
 
-      const year = getTextContentIfExists(div, ".lister-item-year");
+      const [yearElement, runtimeElement] = div.querySelectorAll('.dli-title-metadata-item');
 
-      const runtimeQuery =
-        multimediaType === "series"
-          ? ".lister-item-details > span:nth-child(3)"
-          : ".runtime";
-      const runtime = getTextContentIfExists(div, runtimeQuery);
+      const year = yearElement.textContent;
+      const runtime = runtimeElement.textContent;
 
-      const genres = getTextContentIfExists(div, ".genre");
-      const ratingIMDB = getTextContentIfExists(div, ".ratings-imdb-rating");
-      const ratingMetac = getTextContentIfExists(div, ".metascore");
+      // const genres = getTextContentIfExists(div, ".genre");
+      const ratingIMDB = div.querySelector('[data-testid="ratingGroup--imdb-rating"]').textContent.replace(/\u00A0/g, ' ').split(' ')[0];
+      const ratingMetac = getTextContentIfExists(div, ".metacritic-score-box");
 
-      const creditsElem = div.querySelector(".lister-item-credits");
+      const creditsElem = div.querySelector(".dli-plot-container").nextElementSibling;
       const credits = creditsElem
         ? Array.from(creditsElem.children)
-            .filter((elem) => elem.tagName !== "SPAN")
+            // .filter((elem) => elem.tagName !== "SPAN") // TODO split based on director and stars span
             .map((elem) => elem.textContent)
         : [];
 
@@ -46,7 +43,7 @@
         imgSrc,
         year,
         runtime,
-        genres,
+        genres: "", // TODO: Cut support for this as IMDB no longer displays genre content
         ratingIMDB,
         ratingMetac,
         credits,
@@ -56,47 +53,51 @@
   };
 
   const clearLoadMore = async () => {
-    clearInterval(loadMoreInterval);
-
-    // Gets the total num of titles from top of the page
-    const numOfTitles = +document
-      .querySelector(".lister-details")
-      .firstChild.textContent.split(" ")[0];
-    console.log(numOfTitles);
-
-    // To load multimedias' content it scrolls ten by ten.
-    // If the content is already loaded it just wait for 0.1 seconds,
-    // otherwise it pauses for 2.5 seconds
-    for (let i = 5; i < numOfTitles; i += 5) {
-      const itemToScroll = document.querySelectorAll(".lister-item")[i];
-      const timeout = itemToScroll.querySelector(".clearfix") ? 500 : 2000;
-      itemToScroll.scrollIntoView();
-      await new Promise((resolve) => setTimeout(resolve, timeout));
-    }
-
     // gets all of the multimedia divs
-    const multimediaDivs = document.querySelectorAll(".lister-item");
-    console.log(multimediaDivs.length);
+    const multimediaDivs = document.querySelectorAll(".ipc-metadata-list-summary-item");
 
     // sends the constructor multimedia objects
     const multimedias = constructMultimediasFromDivs(multimediaDivs);
-    console.log(multimedias);
+    console.log(multimedias)
+
     chrome.runtime.sendMessage({
       message: "all_multimedia",
       payload: JSON.stringify(multimedias),
     });
   };
+  
+  const numOfTitlesElem = document.querySelector('[data-testid="list-page-mc-total-items"]');
+  const numOfTitles = numOfTitlesElem.textContent.split(' ')[0];
 
-  // it first tries to load all multimedia by pressing the load more btn until it disappears
-  // then in clearLoadMore fucntion, the app will scroll to load unloaded content
   const loadMore = () => {
-    const loadMore = document.querySelector(".load-more");
-    loadMore ? loadMore.click() : clearLoadMore();
+    // const scrollAmount = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
+    document.documentElement.scrollTop += scrollAmount;
+
+    const allTitles = document.querySelectorAll('.ipc-title-link-wrapper');
+    const targetElement = allTitles[allTitles.length - 1];
+
+    if (targetElement && targetElement.textContent.trim().startsWith(numOfTitles) && isInView(targetElement)) {
+      clearLoadMore();
+    } else {
+      setTimeout(loadMore, 500);
+    }
   };
+
   chrome.runtime.sendMessage({
     message: "scanning_has_started",
   });
-  const loadMoreInterval = setInterval(loadMore, 200);
-
-  //  window.scrollBy(0, loadMore.offsetTop - document.body.scrollTop);
+  
+  loadMore();
 })();
+
+function isInView(element) {
+  const rect = element.getBoundingClientRect();
+  const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+  const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+
+  const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+  const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+
+  return (vertInView && horInView);
+}
