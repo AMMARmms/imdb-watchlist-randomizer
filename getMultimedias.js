@@ -74,7 +74,7 @@
     const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
     document.documentElement.scrollTop += scrollAmount;
 
-    const allTitles = document.querySelectorAll('.ipc-title-link-wrapper');
+    const allTitles = document.querySelectorAll('.ipc-metadata-list-summary-item');
     const targetElement = allTitles[allTitles.length - 1];
 
     if (targetElement && targetElement.textContent.trim().startsWith(numOfTitles) && isInView(targetElement)) {
