@@ -36,9 +36,16 @@ const createTitleElem = (mmedia) => {
 const createYearElem = (year) => {
   const yearElem = document.createElement("p");
   yearElem.textContent = year;
-  addClassesToHTMLElem(yearElem, "year mb-4");
+  addClassesToHTMLElem(yearElem, "year mb-2");
   return yearElem;
 };
+
+const createVoteCountElem = (voteCount) => {
+	const voteElem = document.createElement("li");
+	addClassesToHTMLElem(voteElem, "vote");
+	voteElem.textContent = voteCount;
+	return voteElem;
+}
 
 const createIMDBRatingElem = (rating) => {
   const ratingElem = document.createElement("li");
@@ -63,6 +70,7 @@ const createMetascoreElem = (score) => {
 const createRatingsElem = (mmedia) => {
   const ratingsElem = document.createElement("ul");
   addClassesToHTMLElem(ratingsElem, "ratings");
+  ratingsElem.appendChild(createVoteCountElem(mmedia.voteCount));
   ratingsElem.appendChild(createIMDBRatingElem(mmedia.ratingIMDB));
   ratingsElem.appendChild(createMetascoreElem(mmedia.ratingMetac));
   return ratingsElem;
@@ -86,7 +94,7 @@ const createRuntimeElem = (runtime) => {
 
 const createHeroicContent = (mmedia, showPoster = true, showRatings = true) => {
   const heroicDiv = document.createElement("div");
-  addClassesToHTMLElem(heroicDiv, "mb-4 heroic-content");
+  addClassesToHTMLElem(heroicDiv, "mb-3 heroic-content");
   showRatings && heroicDiv.appendChild(createRatingsElem(mmedia));
   showPoster && heroicDiv.appendChild(createPosterElem(mmedia.imgSrc));
   heroicDiv.appendChild(createRuntimeElem(mmedia.runtime));
@@ -104,6 +112,13 @@ const createGenresElem = (genres) => {
     genresList.appendChild(genreListItem);
   });
   return genresList;
+};
+
+const createStoryElem = (story) => {
+	const StoryElem = document.createElement("ul");
+	StoryElem.textContent = story;
+    addClassesToHTMLElem(StoryElem, "mb-2 story list-inline");
+    return StoryElem;	
 };
 
 const createCreditsElem = (credits) => {
@@ -126,6 +141,7 @@ const createDivFromMultimedia = (mmedia) => {
   div.appendChild(createTitleElem(mmedia));
   div.appendChild(createYearElem(mmedia.year));
   div.appendChild(createHeroicContent(mmedia, showPoster, showRatings));
+  div.appendChild(createStoryElem(mmedia.story));
   // showGenres && div.appendChild(createGenresElem(mmedia.genres.split(", "))); // TODO remove from code as well
   showCredits && div.appendChild(createCreditsElem(mmedia.credits));
 
@@ -243,22 +259,27 @@ const saveWatchlistToLocal = (multimedias) => {
   );
 };
 
+const randomizeFromCacheBtn = document.querySelector("#randomizeFromSync");
+randomizeFromCacheBtn.hasEventListener = false;
 const loadWatchlistFromLocal = (randomizeFromCacheBtn, listenerCBack) => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get("imdbRandomizer_watchlist", (result) => {
       const multimedias = result.imdbRandomizer_watchlist;
       if (multimedias) {
         randomizeFromCacheBtn.disabled = false;
+		if (!randomizeFromCacheBtn.hasEventListener) {
         randomizeFromCacheBtn.addEventListener("click", () =>
-          listenerCBack(multimedias)
-        );
+          listenerCBack(multimedias));
+		  randomizeFromCacheBtn.hasEventListener = true;
+		}
         resolve(multimedias);
       } else {
         console.log("No cached watchlist");
         randomizeFromCacheBtn.disabled = true;
+		if (randomizeFromCacheBtn.hasEventListener) {
         randomizeFromCacheBtn.removeEventListener("click", () =>
-          listenerCBack(multimedias)
-        );
+          listenerCBack(multimedias));
+		}
         resolve(null);
       }
     });
