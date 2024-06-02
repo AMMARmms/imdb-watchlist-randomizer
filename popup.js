@@ -6,6 +6,7 @@ const defaultOptions = {
   showGenres: false,
   showPoster: true,
   showRatings: true,
+  showStory: true,
 };
 
 // updates the div which I output some errors, state changes etc. to inform the user
@@ -42,7 +43,7 @@ const createYearElem = (year) => {
 
 const createVoteCountElem = (voteCount) => {
 	const voteElem = document.createElement("li");
-	addClassesToHTMLElem(voteElem, "vote");
+	addClassesToHTMLElem(voteElem, "vote mx-auto");
 	voteElem.textContent = voteCount;
 	return voteElem;
 }
@@ -70,9 +71,9 @@ const createMetascoreElem = (score) => {
 const createRatingsElem = (mmedia) => {
   const ratingsElem = document.createElement("ul");
   addClassesToHTMLElem(ratingsElem, "ratings");
-  ratingsElem.appendChild(createVoteCountElem(mmedia.voteCount));
   ratingsElem.appendChild(createIMDBRatingElem(mmedia.ratingIMDB));
   ratingsElem.appendChild(createMetascoreElem(mmedia.ratingMetac));
+  ratingsElem.appendChild(createVoteCountElem(mmedia.voteCount));
   return ratingsElem;
 };
 
@@ -136,12 +137,12 @@ const createCreditsElem = (credits) => {
 const createDivFromMultimedia = (mmedia) => {
   const div = document.createElement("div");
   addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto p-2 pb-3");
-  const { showCredits, showGenres, showPoster, showRatings } = loadOptions;
+  const { showCredits, showGenres, showPoster, showRatings, showStory } = loadOptions;
 
   div.appendChild(createTitleElem(mmedia));
   div.appendChild(createYearElem(mmedia.year));
   div.appendChild(createHeroicContent(mmedia, showPoster, showRatings));
-  div.appendChild(createStoryElem(mmedia.story));
+  showStory && div.appendChild(createStoryElem(mmedia.story));
   // showGenres && div.appendChild(createGenresElem(mmedia.genres.split(", "))); // TODO remove from code as well
   showCredits && div.appendChild(createCreditsElem(mmedia.credits));
 
@@ -179,6 +180,7 @@ const loadSyncedOptions = async () => {
 const constructOptionsFromForm = () => {
   const showRatings = document.querySelector("#showRatings").checked;
   const showPoster = document.querySelector("#showPoster").checked;
+  const showStory = document.querySelector("#showStory").checked;
   const showGenres = document.querySelector("#showGenres").checked;
   const showCredits = document.querySelector("#showCredits").checked;
   const minIMDBRating = document.querySelector("#minIMDBRating").value;
@@ -186,6 +188,7 @@ const constructOptionsFromForm = () => {
   return {
     showRatings,
     showPoster,
+	showStory,
     showGenres,
     showCredits,
     minIMDBRating,
@@ -207,7 +210,7 @@ const saveOptionsToSync = () => {
   );
 };
 
-inputIds = ['showRatings', 'showPoster', 'showGenres', 'showCredits', 'minIMDBRating', 'multimediaType']
+inputIds = ['showRatings', 'showPoster', 'showGenres', 'showStory', 'showCredits', 'minIMDBRating', 'multimediaType']
 inputIds.forEach(id => {
   const inputWithId = document.querySelector(`#${id}`);
   inputWithId.addEventListener('change', saveOptionsToSync)

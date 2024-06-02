@@ -5,7 +5,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
 
 body {
-  width: 460px;
+  width: 480px;
   font-family: "Roboto", Helvetica, Arial, sans-serif;
 }
 
@@ -19,7 +19,7 @@ body {
 }
 
 nav {
-  background: #001f3f;
+  background: #f5c518;
 }
 
 nav,
@@ -39,11 +39,11 @@ nav > p {
 
 nav > p,
 nav a {
-  color: #8666ee; 
+  color: #121212; 
 }
 
 nav a:hover {
-  color: #5d3ad2;
+  color: #666666;
 }
 
 #githubHref {
@@ -56,7 +56,7 @@ nav a:hover {
 }
 
 .cool-orange {
-  background-color: #FF851B;
+  background-color: #ff4f00;
 }
 
 .cool-orange:hover {
@@ -72,18 +72,18 @@ nav a:hover {
 ******************/
 
 .randomized-mmedia {
-  background: #008080;
+  background: #931aff;
 
 color: rgb(255, 255, 255);
 border-radius: 5px;
-  margin-top: 10px;
+  margin-top: 18px;
 }
 
 .title {
   font-size: 24px;
   text-decoration: none;
   /* color: rgb(87, 153, 239) */
-  color: #FFCC00;
+  color: #DBFF00;
 }
 
 .title:hover {
@@ -103,8 +103,8 @@ border-radius: 5px;
   }
   
   .vote {
-	font-size: 16px;
-	  color: #808080; 
+	font-size: 12px;
+	  color: #FFFFFF; 
        left: 8%;	  
   }
   
@@ -160,12 +160,13 @@ border-radius: 5px;
     margin-bottom: 5px;
   }
   .story {
-	  font-size: 13px;
-	  color: #FF8C00;
+	  font-size: 15px;
+	  text-align: center;
+	  color: #FFFFFF;
   }
   .credits {
-	  font-size: 7px;
-	  color: #B0D454;
+	  font-size: 11px;
+	  color: #ADD8E6;
   }
 
 /******************

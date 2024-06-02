@@ -28,7 +28,7 @@
 
       // const genres = getTextContentIfExists(div, ".genre");
 	  const voteCountElement = div.querySelector('.ipc-rating-star--voteCount');
-      const voteCount = voteCountElement ? voteCountElement.textContent.trim().replace(/[^0-9.K.M]+/g, '') : '';
+      const voteCount = voteCountElement ? voteCountElement.textContent.trim() : '';
       const ratingIMDB = div.querySelector('[data-testid="ratingGroup--imdb-rating"]').textContent.replace(/\u00A0/g, ' ').split(' ')[0];
       const ratingMetac = getTextContentIfExists(div, ".metacritic-score-box");
 	  
@@ -78,9 +78,13 @@
 	// const scrollAmount = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
     document.documentElement.scrollTop += scrollAmount;
+
+    const backgroundElem = document.querySelector('.ipc-page-background');
+    const backgroundElemHeight = window.getComputedStyle(backgroundElem).height;
+    const backgroundElemHeightInt = parseInt(backgroundElemHeight);
+    console.log('backgroundElemHeight height:', backgroundElemHeightInt);
 	
-    const numOfTitlesAsInt = parseInt(numOfTitles);  
-    const maxScrollPos = ((numOfTitlesAsInt - 3) * 207) + 450; // Set max scroll position based on num of titles, avg element's height 207px and the lenghth from page top to 1st element in the list 450px 
+    const maxScrollPos = backgroundElemHeightInt - 600;
     // Define event listener function
     function handleScroll() {
       const currentScrollPos = window.pageYOffset;
