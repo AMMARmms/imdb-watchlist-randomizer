@@ -47,7 +47,7 @@
         genres: "", // TODO: Cut support for this as IMDB no longer displays genre content
         ratingIMDB,
         ratingMetac,
-		plot,
+	plot,
         credits,
         multimediaType,
       };
@@ -63,7 +63,7 @@
     console.log(multimedias);
     chrome.runtime.sendMessage({
       message: "all_multimedia",
-      payload: JSON.stringify(multimedias),		  
+      payload: JSON.stringify(multimedias),
     });
   };
   
@@ -74,12 +74,15 @@
 	// const scrollAmount = document.documentElement.scrollHeight - document.documentElement.clientHeight;	
     const allTitles = document.querySelectorAll(".ipc-metadata-list-summary-item");
     const targetElement = allTitles[allTitles.length - 1];
-	const rect = targetElement.getBoundingClientRect();
+    const targetElementTop = targetElement.getBoundingClientRect().top;
 	
-	const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
-	const nextScrollPos = document.documentElement.scrollTop + scrollAmount;
-	if (nextScrollPos >= rect.top) targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    else document.documentElement.scrollTop += scrollAmount;
+    const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
+    const nextScrollPosition = document.documentElement.scrollTop + scrollAmount;
+
+    if (nextScrollPosition >= targetElementTop)
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    else
+      document.documentElement.scrollTop += scrollAmount;
 
     if (targetElement && targetElement.textContent.trim().startsWith(numOfTitles) && isInView(targetElement)) {
       clearLoadMore();
