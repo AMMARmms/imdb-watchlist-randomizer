@@ -61,6 +61,7 @@
     // sends the constructor multimedia objects
     const multimedias = constructMultimediasFromDivs(multimediaDivs);
     console.log(multimedias);
+    
     chrome.runtime.sendMessage({
       message: "all_multimedia",
       payload: JSON.stringify(multimedias),
