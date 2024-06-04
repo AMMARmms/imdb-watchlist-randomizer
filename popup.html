@@ -22,7 +22,6 @@
         alt="logo"
         class="m-0"
       />
-	  
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
@@ -32,7 +31,7 @@
               target="_blank"
               href="https://github.com/AlkTheOrg/imdb-watchlist-randomizer/blob/main/ABOUT.md#about-the-extension"
               >About</a
-			>
+			> 
           </li>
           <li class="nav-item">
             <a
@@ -55,24 +54,24 @@
       <div class="form-row m-0">
         <div class="col-md-6 mb-3 ml-auto mr-4" style="width: auto">
           <label class="" for="minIMDBRating" style="color: #333333;">Min IMDB Rating:</label>
-          <select class="form-control form-control-sm" id="minIMDBRating" style="background-color: #DDDDDD; color: #000000; border: 1px solid #001f3f; padding: 5px; border-radius: 5px;">
-            <option value="1" selected style="background-color: #FFFFFF; color: #000000;">All</option>
-            <option value="2" style="background-color: #FFFFFF; color: #000000;">2</option>
-            <option value="3" style="background-color: #FFFFFF; color: #000000;">3</option>
-            <option value="4" style="background-color: #FFFFFF; color: #000000;">4</option>
-            <option value="5" style="background-color: #FFFFFF; color: #000000;">5</option>
-            <option value="6" style="background-color: #FFFFFF; color: #000000;">6</option>
-            <option value="7" style="background-color: #FFFFFF; color: #000000;">7</option>
-            <option value="8" style="background-color: #FFFFFF; color: #000000;">8</option>
-            <option value="9" style="background-color: #FFFFFF; color: #000000;">9</option>
+          <select class="form-control form-control-sm" id="minIMDBRating">
+            <option value="1" selected>All</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
           </select>
         </div>
         <div class="col-md-6 mb-3 mr-auto ml-4" style="width: auto">
           <label class="" for="multimediaType">Multimedia Type: </label>
-          <select class="form-control form-control-sm" id="multimediaType" style="background-color: #DDDDDD; color: #000000; border: 1px solid #001f3f; padding: 5px; border-radius: 5px;">
-            <option value="movie" selected style="background-color: #FFFFFF; color: #000000;">Movies Only</option>
-            <option value="series" style="background-color: #FFFFFF; color: #000000;">TV Series Only</option>
-            <option value="all" style="background-color: #FFFFFF; color: #000000;">All</option>
+          <select class="form-control form-control-sm" id="multimediaType">
+            <option value="movie" selected>Movies Only</option>
+            <option value="series">TV Series Only</option>
+            <option value="all">All</option>
           </select>
         </div>
       </div>
@@ -102,9 +101,9 @@
             checked
             class="form-check-input"
             type="checkbox"
-            id="showStory"
+            id="showplot"
           />
-          <label class="form-check-label" for="showStory">Story</label>
+          <label class="form-check-label" for="showplot">Plot</label>
         </div>
         <div class="form-check form-check-inline d-none">
           <input

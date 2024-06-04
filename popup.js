@@ -6,7 +6,7 @@ const defaultOptions = {
   showGenres: false,
   showPoster: true,
   showRatings: true,
-  showStory: true,
+  showplot: true,
 };
 
 // updates the div which I output some errors, state changes etc. to inform the user
@@ -41,13 +41,6 @@ const createYearElem = (year) => {
   return yearElem;
 };
 
-const createVoteCountElem = (voteCount) => {
-	const voteElem = document.createElement("li");
-	addClassesToHTMLElem(voteElem, "vote mx-auto");
-	voteElem.textContent = voteCount;
-	return voteElem;
-}
-
 const createIMDBRatingElem = (rating) => {
   const ratingElem = document.createElement("li");
   addClassesToHTMLElem(ratingElem, "rating");
@@ -73,7 +66,6 @@ const createRatingsElem = (mmedia) => {
   addClassesToHTMLElem(ratingsElem, "ratings");
   ratingsElem.appendChild(createIMDBRatingElem(mmedia.ratingIMDB));
   ratingsElem.appendChild(createMetascoreElem(mmedia.ratingMetac));
-  ratingsElem.appendChild(createVoteCountElem(mmedia.voteCount));
   return ratingsElem;
 };
 
@@ -115,11 +107,11 @@ const createGenresElem = (genres) => {
   return genresList;
 };
 
-const createStoryElem = (story) => {
-	const StoryElem = document.createElement("ul");
-	StoryElem.textContent = story;
-    addClassesToHTMLElem(StoryElem, "mb-2 story list-inline");
-    return StoryElem;	
+const createplotElem = (plot) => {
+	const plotElem = document.createElement("ul");
+	plotElem.textContent = plot;
+    addClassesToHTMLElem(plotElem, "mb-2 plot list-inline");
+    return plotElem;	
 };
 
 const createCreditsElem = (credits) => {
@@ -137,12 +129,12 @@ const createCreditsElem = (credits) => {
 const createDivFromMultimedia = (mmedia) => {
   const div = document.createElement("div");
   addClassesToHTMLElem(div, "randomized-mmedia w-75 text-center mx-auto p-2 pb-3");
-  const { showCredits, showGenres, showPoster, showRatings, showStory } = loadOptions;
+  const { showCredits, showGenres, showPoster, showRatings, showplot } = loadOptions;
 
   div.appendChild(createTitleElem(mmedia));
   div.appendChild(createYearElem(mmedia.year));
   div.appendChild(createHeroicContent(mmedia, showPoster, showRatings));
-  showStory && div.appendChild(createStoryElem(mmedia.story));
+  showplot && div.appendChild(createplotElem(mmedia.plot));
   // showGenres && div.appendChild(createGenresElem(mmedia.genres.split(", "))); // TODO remove from code as well
   showCredits && div.appendChild(createCreditsElem(mmedia.credits));
 
@@ -180,7 +172,7 @@ const loadSyncedOptions = async () => {
 const constructOptionsFromForm = () => {
   const showRatings = document.querySelector("#showRatings").checked;
   const showPoster = document.querySelector("#showPoster").checked;
-  const showStory = document.querySelector("#showStory").checked;
+  const showplot = document.querySelector("#showplot").checked;
   const showGenres = document.querySelector("#showGenres").checked;
   const showCredits = document.querySelector("#showCredits").checked;
   const minIMDBRating = document.querySelector("#minIMDBRating").value;
@@ -188,7 +180,7 @@ const constructOptionsFromForm = () => {
   return {
     showRatings,
     showPoster,
-	showStory,
+	showplot,
     showGenres,
     showCredits,
     minIMDBRating,
@@ -210,7 +202,7 @@ const saveOptionsToSync = () => {
   );
 };
 
-inputIds = ['showRatings', 'showPoster', 'showGenres', 'showStory', 'showCredits', 'minIMDBRating', 'multimediaType']
+inputIds = ['showRatings', 'showPoster', 'showGenres', 'showplot', 'showCredits', 'minIMDBRating', 'multimediaType']
 inputIds.forEach(id => {
   const inputWithId = document.querySelector(`#${id}`);
   inputWithId.addEventListener('change', saveOptionsToSync)
@@ -262,27 +254,22 @@ const saveWatchlistToLocal = (multimedias) => {
   );
 };
 
-const randomizeFromCacheBtn = document.querySelector("#randomizeFromSync");
-randomizeFromCacheBtn.hasEventListener = false;
 const loadWatchlistFromLocal = (randomizeFromCacheBtn, listenerCBack) => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get("imdbRandomizer_watchlist", (result) => {
       const multimedias = result.imdbRandomizer_watchlist;
       if (multimedias) {
         randomizeFromCacheBtn.disabled = false;
-		if (!randomizeFromCacheBtn.hasEventListener) {
         randomizeFromCacheBtn.addEventListener("click", () =>
-          listenerCBack(multimedias));
-		  randomizeFromCacheBtn.hasEventListener = true;
-		}
+          listenerCBack(multimedias)
+        );
         resolve(multimedias);
       } else {
         console.log("No cached watchlist");
         randomizeFromCacheBtn.disabled = true;
-		if (randomizeFromCacheBtn.hasEventListener) {
         randomizeFromCacheBtn.removeEventListener("click", () =>
-          listenerCBack(multimedias));
-		}
+          listenerCBack(multimedias)
+        );
         resolve(null);
       }
     });

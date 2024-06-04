@@ -23,16 +23,14 @@
 
       const [yearElement, runtimeElement] = div.querySelectorAll('.dli-title-metadata-item');
 
-      const year = yearElement ? yearElement.textContent.trim() : '';
-      const runtime = runtimeElement ? runtimeElement.textContent.trim() : '';
+      const year = yearElement.textContent.trim();
+      const runtime = runtimeElement ? runtimeElement.textContent.trim():"";
 
       // const genres = getTextContentIfExists(div, ".genre");
-	  const voteCountElement = div.querySelector('.ipc-rating-star--voteCount');
-      const voteCount = voteCountElement ? voteCountElement.textContent.trim() : '';
       const ratingIMDB = div.querySelector('[data-testid="ratingGroup--imdb-rating"]').textContent.replace(/\u00A0/g, ' ').split(' ')[0];
       const ratingMetac = getTextContentIfExists(div, ".metacritic-score-box");
 	  
-      const story = div.querySelector('.ipc-html-content-inner-div').textContent;
+      const plot = div.querySelector('.ipc-html-content-inner-div').textContent;
       const creditsElem = div.querySelector(".dli-plot-container").nextElementSibling;
       const credits = creditsElem
         ? Array.from(creditsElem.children)
@@ -47,10 +45,9 @@
         year,
         runtime,
         genres: "", // TODO: Cut support for this as IMDB no longer displays genre content
-		voteCount,
         ratingIMDB,
         ratingMetac,
-		story,
+		plot,
         credits,
         multimediaType,
       };
@@ -63,11 +60,10 @@
 
     // sends the constructor multimedia objects
     const multimedias = constructMultimediasFromDivs(multimediaDivs);
-    console.log(multimedias)
-
+    console.log(multimedias);
     chrome.runtime.sendMessage({
       message: "all_multimedia",
-      payload: JSON.stringify(multimedias),
+      payload: JSON.stringify(multimedias),		  
     });
   };
   
@@ -75,35 +71,17 @@
   const numOfTitles = numOfTitlesElem.textContent.split(' ')[0];
 
   const loadMore = () => {
-	// const scrollAmount = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
-    document.documentElement.scrollTop += scrollAmount;
-
-    const backgroundElem = document.querySelector('.ipc-page-background');
-    const backgroundElemHeight = window.getComputedStyle(backgroundElem).height;
-    const backgroundElemHeightInt = parseInt(backgroundElemHeight);
-    console.log('backgroundElemHeight height:', backgroundElemHeightInt);
-	
-    const maxScrollPos = backgroundElemHeightInt - 600;
-    // Define event listener function
-    function handleScroll() {
-      const currentScrollPos = window.pageYOffset;
-      // Check if the scroll position exceeds the maximum
-      if (currentScrollPos > maxScrollPos) {
-        window.scrollTo(0, maxScrollPos);
-      }
-   }
-
-   window.addEventListener('scroll', handleScroll);
-   setTimeout(function() {
-     window.removeEventListener('scroll', handleScroll);
-   }, 650);
-
+	// const scrollAmount = document.documentElement.scrollHeight - document.documentElement.clientHeight;	
     const allTitles = document.querySelectorAll(".ipc-metadata-list-summary-item");
     const targetElement = allTitles[allTitles.length - 1];
-    const targetTextElem = targetElement ? targetElement.querySelector(".ipc-title__text") : null;
+	const rect = targetElement.getBoundingClientRect();
+	
+	const scrollAmount = 212 * 25; // each element's height is close to 212px and to make sure we load all the images we scroll 25 elements by 25
+	const nextScrollPos = document.documentElement.scrollTop + scrollAmount;
+	if (nextScrollPos >= rect.top) targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    else document.documentElement.scrollTop += scrollAmount;
 
-    if (targetTextElem && targetTextElem.textContent.trim().startsWith(numOfTitles) && isInView(targetElement)) {
+    if (targetElement && targetElement.textContent.trim().startsWith(numOfTitles) && isInView(targetElement)) {
       clearLoadMore();
     } else {
       setTimeout(loadMore, 500);
